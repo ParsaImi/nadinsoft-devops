@@ -1,0 +1,10 @@
+build-job:
+    stage: build
+    script:
+        - echo "We are building!!!"
+
+test-job:
+    stage: test
+    script:
+        - echo "We are Testing......"
+
