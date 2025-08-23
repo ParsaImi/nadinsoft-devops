@@ -1,13 +1,19 @@
 build-job:
+    tags:
+        - shell
     stage: build
     script:
         - echo "We are building!!!"
 
 test-job:
+    tags:
+        - shell
     stage: test
     script:
         - echo "We are Testing......"
 deploy-prod:
+    tags:
+        - shell
     stage: deploy
     script:
         - echo "DEPLYYYYYYY"
