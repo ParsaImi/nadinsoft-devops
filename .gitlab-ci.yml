@@ -1,6 +1,4 @@
 build-job:
-    tags:
-        - shell
     stage: build
     script:
         - echo "We are building!!!"
