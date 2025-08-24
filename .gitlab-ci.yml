@@ -8,18 +8,17 @@ stages:
 before_script:
   docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-
-test:
-  stage: test
-  script:
-    - docker compose run simple_app python manage.py test 
   
 
 build:
   stage: build
   script:
     - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME .
- 
+
+test:
+  stage: test
+  script:
+    - docker compose run simple_app python manage.py test  
 
 push:
   stage: push
