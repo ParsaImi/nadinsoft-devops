@@ -1,8 +1,10 @@
 FROM python:3.13-slim
 
 # Create and set the working directory in container
-RUN mkdir /app
-WORKDIR /app
+ENV HOME=/home/app/simple_app
+
+RUN mkdir -p $HOME
+WORKDIR $HOME
 
 # Prevents Python from writing pyc files to disk
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -14,20 +16,13 @@ ENV PYTHONUNBUFFERED=1
 RUN pip install --upgrade pip
 
 # Copy the requirements file and install dependencies
-COPY requirements.txt  /app/
+COPY requirements.txt  $HOME
 
 # install all dependencies 
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the Django project to the container
-COPY . /app/
-
-# Copy requirements first for better caching
-COPY app/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application code
-COPY app/ .
+COPY . $HOME
 
 # Expose the Django port
 EXPOSE 8000
