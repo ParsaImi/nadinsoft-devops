@@ -1,0 +1,8 @@
+version: "3"
+
+
+service:
+  simple_app:
+    build: .
+    ports:
+      - 8000:8000
