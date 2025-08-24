@@ -12,17 +12,15 @@ ENV PYTHONDONTWRITEBYTECODE=1
 #Prevents Python from buffering stdout and stderr
 ENV PYTHONUNBUFFERED=1
 
-#Upgrade pip
-RUN pip install --upgrade pip
-
-# Copy the requirements file and install dependencies
-COPY requirements.txt  $HOME
-
-# install all dependencies 
-RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the Django project to the container
 COPY . $HOME
+
+#Upgrade pip
+RUN pip install --upgrade pip
+
+# install all dependencies 
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose the Django port
 EXPOSE 8000
