@@ -14,7 +14,7 @@ ENV PYTHONUNBUFFERED=1
 
 
 # Copy the Django project to the container
-COPY . $HOME
+COPY ./simple_app $HOME
 
 #Upgrade pip
 RUN pip install --upgrade pip
