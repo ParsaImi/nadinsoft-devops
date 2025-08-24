@@ -1,0 +1,10 @@
+version: "3"
+
+
+service:
+  simple_app:
+    image: "${CI_REGISTERY_IMAGE}:${CI_COMMIT_REF_NAME}"
+    build:
+      context: .
+    ports:
+      - 8000:8000
