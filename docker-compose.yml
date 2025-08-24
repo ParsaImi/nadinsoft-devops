@@ -3,7 +3,7 @@ version: "3"
 
 services:
   simple_app:
-    image: "${CI_REGISTERY_IMAGE}:${CI_COMMIT_REF_NAME}"
+    image: "${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_NAME}"
     build:
       context: .
     ports:
