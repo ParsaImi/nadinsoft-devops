@@ -2,8 +2,11 @@ global:
   scrape_interval:     15s
 
 
-scrape_configs:
+rule_files:
+  - "alert_rules.yml"
 
+
+scrape_configs:
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
@@ -19,6 +22,12 @@ scrape_configs:
       - targets: ['django-app:8000']
     metrics_path: '/health'
     scrape_interval: 30s
+
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ["alertmanager:9093"]
 
   # Example job for node_exporter
   # - job_name: 'node_exporter'
