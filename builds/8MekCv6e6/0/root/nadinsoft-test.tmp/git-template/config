@@ -7,6 +7,6 @@
 [gc]
 	autoDetach = false
 [http]
-	extraHeader = X-Gitaly-Correlation-ID: 01K3G3D9CVQWTSRSCNS3SW8F4Y
+	extraHeader = X-Gitaly-Correlation-ID: 01K3G7PW38PRWJ78GY977RADPF
 [transfer]
 	bundleURI = true
