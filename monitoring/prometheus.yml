@@ -17,11 +17,6 @@ scrape_configs:
     metrics_path: '/metrics'
     scrape_interval: 5s
 
-  - job_name: django-health'
-    static_configs:
-      - targets: ['django-app:8000']
-    metrics_path: '/health'
-    scrape_interval: 30s
 
 
 alerting:

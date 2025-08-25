@@ -1,12 +1,8 @@
 from django.test import TestCase
-
+from django.urls import reverse
 # Create your tests here.
 class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        self.assertEqual(1 + 1 , 2)
-
-    def test_basic_substraction(self):
-        self.assertEqual(2 - 1 , 1)
-
-    def test_basic_multiplication(self):
-        self.assertEqual(2 * 2, 4)
+    def test_api_endpoint(self):
+        response = self.client.get(reverse('api_endpoint'))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('message', response.json())
