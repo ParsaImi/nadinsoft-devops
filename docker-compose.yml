@@ -21,7 +21,7 @@ services:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
       - prometheus-data:/prometheus
-    restart: always 
+    restart: always
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
 
@@ -32,7 +32,7 @@ services:
       - "3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana
-    restart: always 
+    restart: always
 
 
   alertmanager:
@@ -42,7 +42,7 @@ services:
       - "9095:9093"
     volumes:
       - ./monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.yml
-    restart: always 
+    restart: always
 
 volumes:
   prometheus-data:
