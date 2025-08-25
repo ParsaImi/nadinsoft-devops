@@ -21,17 +21,19 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
 
-  # grafana:
-  #   image: grafana/grafana-oss:latest
-  #   container_name: grafana
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - grafana-data:/var/lib/grafana
-  #   restart: unless-stopped
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: unless-stopped
 
 volumes:
   prometheus-data:
+    driver: local
+  grafana-data:
     driver: local
   # grafana-data:
   #   driver: local
