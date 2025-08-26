@@ -152,7 +152,7 @@ but restrict from outside
 
 ## Restart Policy
 I've implemented a systemd service which restart containers in exit or crash scenarios. 
- (*restart : always* property in docker compose does not restart container after kill)
+ (`restart : always` property in docker compose does not restart container after kill)
 
 ```ini
 [Unit]
