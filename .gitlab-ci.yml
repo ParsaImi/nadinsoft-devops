@@ -1,59 +1,50 @@
 stages:
-  - test
   - build
+  - test
+  - push
   - deploy
 
-variables:
-  DOCKER_IMAGE_NAME: parsaimi/demo-app:1.0
-  DOCKER_IMAGE_TAG: 1.0
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop")'
+    - when: never
 
 before_script:
-  - docker --version
+  docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-test:
-  stage: test
-  image: python:3.9-slim-buster
-  before_script:
-    - cd app
-    - pip install -r requirements.txt
-    - pip install pytest
-  script:
-    - pytest test_app.py -v
-  artifacts:
-    reports:
-      junit: app/test-results.xml
-  coverage: '/TOTAL.*\s+(\d+%)$/'
+  
 
 build:
   stage: build
-  image: docker:28.3.3
-  services:
-    - docker:20.3.3-dind
-  before_script:
-    - docker login -username $REGISTRY_USER --password $REGISTERY_PASS
   script:
-    
-    - docker build -t $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG .
-    - docker push $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
-    - echo "Image pushed to $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
-  only:
-    - main
-    - develop
+    - docker build --tag="$CI_REGISTRY_IMAGE":"$CI_COMMIT_REF_NAME" .
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+
+test:
+  stage: test
+  script:
+    - docker compose run django-app python simple_app/manage.py test simple_app
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+
+push:
+  stage: push
+  script:
+    - docker push "$CI_REGISTRY_IMAGE":"$CI_COMMIT_REF_NAME"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
 
 deploy:
   stage: deploy
-  image: docker:20.10.16
-  services:
-    - docker:20.10.16-dind
   script:
-    - echo "Deploying to production..."
-    - docker login -username $REGISTRY_USER --password $REGISTRY_PASS
-    - docker-compose down || true
-    - docker-compose pull
-    - docker-compose up -d
-    - sleep 30
-    - docker-compose ps
-    - curl -f http://localhost:5000/ || exit 1
-  only:
-    - main
-  when: manual
+    - docker compose pull
+    - docker compose down
+    - docker compose up -d
+    
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+

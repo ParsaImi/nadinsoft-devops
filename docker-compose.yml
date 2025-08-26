@@ -1,22 +1,54 @@
-version: '3.8'
+version: "3"
+
 
 services:
-  web:
-    build: .
-    container_name: devops-web-service
+  django-app:
+    image: "${CI_REGISTRY_IMAGE:-localhost:5050/root/nadinsoft-test}:${CI_COMMIT_REF_NAME:-main}"
+    build:
+      context: .
     ports:
-      - "5000:5000"
-    restart: unless-stopped
-    environment:
-      - FLASK_ENV=production
-    networks:
-      - app-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-  
-networks:
-  app-network:
-    driver: bridge
+      - 8000:8000
+
+    restart: always
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+        # Using 9091 port because gitlab uses 9090 port
+      - "9091:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/alert_rules.yml:/etc/prometheus/alert_rules.yml
+      - prometheus-data:/prometheus
+    restart: always
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+    restart: always
+
+
+  alertmanager:
+    image: prom/alertmanager:v0.26.0
+    ports:
+      # Using 9095 port because gitlab uses 9093 port
+      - "9095:9093"
+    volumes:
+      - ./monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    restart: always
+
+volumes:
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+  # grafana-data:
+  #   driver: local
+

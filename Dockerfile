@@ -1,21 +1,29 @@
-FROM python:3.12-slim
+FROM python:3.13-slim
 
-WORKDIR /app
+# Create and set the working directory in container
+ENV HOME=/home/app/simple_app
 
-# Copy requirements first for better caching
-COPY app/requirements.txt .
+RUN mkdir -p $HOME
+WORKDIR $HOME
+
+# Prevents Python from writing pyc files to disk
+ENV PYTHONDONTWRITEBYTECODE=1
+
+#Prevents Python from buffering stdout and stderr
+ENV PYTHONUNBUFFERED=1
+
+
+# Copy the Django project to the container
+COPY . $HOME
+
+#Upgrade pip
+RUN pip install --upgrade pip
+
+# install all dependencies 
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY app/ .
+# Expose the Django port
 
-# Create non-root user
-RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
-USER appuser
+# Run Django’s development server
+CMD ["python", "simple_app/manage.py", "runserver", "0.0.0.0:8000"]
 
-EXPOSE 5000
-
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:5000/ || exit 1
-
-CMD ["python", "app.py"]
