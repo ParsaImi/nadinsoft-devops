@@ -47,36 +47,65 @@ docker compose ps
 - **Grafana**: http://localhost:3000
 - **Alertmanager**: http://localhost:9095
 
+![Alt text](screenshots/Screenshot%202025-08-25%2022-17-58.png)
+
 ## CI/CD Pipeline
+
+### Pipeline overview
+
+![Alt text](screenshots/Screenshot%202025-08-25%2020-34-04.png)
 
 ### Pipeline Stages
 1. **Build**: Create Docker images
 2. **Test**: Run unit tests
-3. **Push**: Push to container registry
-4. **Deploy**: Deploy to production
+
+![Alt text](screenshots/Screenshot%202025-08-26%2012-47-27.png)
+
+4. **Push**: Push to container registry
+5. **Deploy**: Deploy to production
 
 ### Triggering the Pipeline
 
 #### Automatic Triggers
-- **Push to main**: Full pipeline (build → test → deploy to production)
+- **Push to main**: Full pipeline (build → test → push and deploy to production)
 - **Push to develop**: Build and test only
-- **Merge requests**: Build, test, and deploy
+- **Merge requests**: Build, test, push , deploy
+
+
+
+
+
+
 
 
 
 
 ## Monitoring & Alerting
 
-### Prometheus Metrics
-- **Application metrics**: Request count, response time
+### Prometheus Target Status
+- **Application status**: state of django application
+
+![Alt text](screenshots/Screenshot-prometheus-target-status.png)
 
 
 ### Grafana Dashboards
 - **Application Overview**: Request metrics and performance
 
+![Alt text](screenshots/Screenshot%202025-08-26%2010-07-11.png)
+
 ### Alert Rules
-- High response time (95% of requests are taking more than 0.5 seconds)  
+- High response time (95% of requests are taking more than 0.5 seconds)
+
+![Alt text](screenshots/Screenshot%202025-08-25%2020-38-30.png)
+
 - Service unavailable (The Django app has been unreachable for 10+ seconds)
+
+![Alt text](screenshots/Screenshot%202025-08-25%2020-42-44.png)
+
+### Prometheus Target Status
+
+
+
 
 ## Security & Networking
 
@@ -91,6 +120,14 @@ sudo iptables -L -n -v
 # Test external access restriction
 curl -m 5 http://external-ip:8080  # Should timeout/fail
 ```
+services are accesible from host
+
+![Alt text](screenshots/Screenshot%202025-08-26%2015-42-27.png)
+
+
+but restrict from outside
+
+![Alt text](screenshots/screenshot-2025-08-26_15-45-09.png)
 
 ### Firewall Rules Applied
 - Allow localhost access (127.0.0.1)
@@ -98,8 +135,28 @@ curl -m 5 http://external-ip:8080  # Should timeout/fail
 - Block external access to services
 - Allow SSH (port 22) for administration
 
+## Restart Policy
+I've implemented a systemd service which restart containers in exit or crash scenarios. 
+ (*restart : always* property in docker compose does not restart container after kill)
 
+```ini
+[Unit]
+Description=Container Restart Service for Nadinsoft test
+Requires=docker.service
+After=docker.service
 
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+WorkingDirectory=/home/parsa/nadinsoft/Interview_task
+ExecStart=/bin/bash -c 'while true; do docker compose ps -aq | xargs docker inspect --format="{{.State.Status}}" | grep -q "exited" && docker compose up -d; sleep 30; done'
+ExecStop=/usr/bin/docker compose down
+
+[Install]
+WantedBy=multi-user.target
+```
+![Alt text](screenshots/Screenshot-container-restart-afterkill.png)
 
 ## Screenshots & Evidence
 
@@ -120,3 +177,4 @@ Include screenshots of:
 
 ## Support
 For issues or questions regarding this implementation, please check the logs first and refer to the troubleshooting section above.
+
