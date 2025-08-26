@@ -7,10 +7,10 @@ This README include screenshots of:
  - ✅ Successful `docker compose up` output
  - ✅ Passing GitLab CI pipeline stages, including logs
  - ✅ Prometheus targets
- - ✅ Grafana dashboard with data
+ - ✅ Grafana dashboard for python webapp
  - ✅ Triggered alert in Prometheus ( using Alertmanager )
  - ✅ iptables rules verification
- - ✅ Container restart after kill
+ - ✅ Container restart after kill or crash
 
 ## Architecture
 - **Application**: Simple Python web service (django)
