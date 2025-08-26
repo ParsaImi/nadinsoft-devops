@@ -4,13 +4,13 @@
 This repository contains a containerized Python web service with complete CI/CD pipeline, monitoring, and networking configurations as part of a DevOps practical assessment.
 
 This README include screenshots of:
- ✅ Successful `docker compose up` output
- ✅ Passing GitLab CI pipeline stages, including logs
- ✅ Prometheus targets
- ✅ Grafana dashboard with data
- ✅ Triggered alert in Prometheus ( using Alertmanager )
- ✅ iptables rules verification
- ✅ Container restart after kill
+ - ✅ Successful `docker compose up` output
+ - ✅ Passing GitLab CI pipeline stages, including logs
+ - ✅ Prometheus targets
+ - ✅ Grafana dashboard with data
+ - ✅ Triggered alert in Prometheus ( using Alertmanager )
+ - ✅ iptables rules verification
+ - ✅ Container restart after kill
 
 ## Architecture
 - **Application**: Simple Python web service (django)
