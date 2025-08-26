@@ -3,6 +3,15 @@
 ## Overview
 This repository contains a containerized Python web service with complete CI/CD pipeline, monitoring, and networking configurations as part of a DevOps practical assessment.
 
+This README include screenshots of:
+- ✅ Successful `docker compose up` output
+- ✅ Passing GitLab CI pipeline stages, including logs
+- ✅ Prometheus targets
+- ✅ Grafana dashboard with data
+- ✅ Triggered alert in Prometheus ( using Alertmanager )
+- ✅ iptables rules verification
+- ✅ Container restart after kill
+
 ## Architecture
 - **Application**: Simple Python web service (django)
 - **Containerization**: Docker & Docker Compose
@@ -57,12 +66,20 @@ docker compose ps
 
 ### Pipeline Stages
 1. **Build**: Create Docker images
-2. **Test**: Run unit tests
+ 
+![Alt text](screenshots/Screenshot%202025-08-26%2011-34-28.png)
+ 
+5. **Test**: Run unit tests
 
 ![Alt text](screenshots/Screenshot%202025-08-26%2012-47-27.png)
 
 4. **Push**: Push to container registry
-5. **Deploy**: Deploy to production
+
+![Alt text](screenshots/Screenshot%202025-08-26%2011-34-41.png)
+
+7. **Deploy**: Deploy to production
+
+![Alt text](screenshots/Screenshot%202025-08-26%2011-35-06.png)
 
 ### Triggering the Pipeline
 
@@ -101,8 +118,6 @@ docker compose ps
 - Service unavailable (The Django app has been unreachable for 10+ seconds)
 
 ![Alt text](screenshots/Screenshot%202025-08-25%2020-42-44.png)
-
-### Prometheus Target Status
 
 
 
@@ -158,23 +173,9 @@ WantedBy=multi-user.target
 ```
 ![Alt text](screenshots/Screenshot-container-restart-afterkill.png)
 
-## Screenshots & Evidence
 
-Include screenshots of:
-- ✅ Successful `docker-compose up` output
-- ✅ Passing GitLab CI pipeline stages
-- ✅ Prometheus targets and metrics
-- ✅ Grafana dashboard with data
-- ✅ Triggered alert in Alertmanager
-- ✅ iptables rules verification
-- ✅ Container restart after kill
 
-## Additional Notes
-- All services use restart policies for high availability
-- Logs are centralized and rotated automatically
-- Security scanning is integrated into CI pipeline
-- Infrastructure as Code principles applied throughout
 
-## Support
-For issues or questions regarding this implementation, please check the logs first and refer to the troubleshooting section above.
+## Author
+ParsaImani
 
