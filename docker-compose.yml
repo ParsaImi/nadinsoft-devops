@@ -3,6 +3,7 @@ version: "3"
 
 services:
   django-app:
+    # CI_REGISTRY_IMAGE and CI_COMMIT_REF_NAME will overwrite in gitlab pipeline
     image: "${CI_REGISTRY_IMAGE:-localhost:5050/root/nadinsoft-test}:${CI_COMMIT_REF_NAME:-main}"
     build:
       context: .
