@@ -9,13 +9,12 @@ import random
 def home(request):
     
     return JsonResponse({
-        'message': 'DevOps Test API',
+        'message': 'NadinSoft DevOps Test API',
         'version': '1.0.0',
         'endpoints': {
             'api': '/api/',
             'slow': '/slow/',
             'metrics': '/metrics/',
-            'webhook': '/webhook/'
         },
         'timestamp': time.time()
     })

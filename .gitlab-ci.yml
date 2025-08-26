@@ -4,6 +4,10 @@ stages:
   - push
   - deploy
 
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop")'
+    - when: never
 
 before_script:
   docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
@@ -14,16 +18,25 @@ build:
   stage: build
   script:
     - docker build --tag="$CI_REGISTRY_IMAGE":"$CI_COMMIT_REF_NAME" .
+  rules:
+    -if: '$CI_COMMIT_BRANCH == "main"'
+    -if: '$CI_COMMIT_BRANCH == "develop"'
 
 test:
   stage: test
   script:
-    - docker compose run django-app python simple_app/manage.py test  
+    - docker compose run django-app python simple_app/manage.py test simple_app
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "develop"'
 
 push:
   stage: push
   script:
     - docker push "$CI_REGISTRY_IMAGE":"$CI_COMMIT_REF_NAME"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
 
 deploy:
   stage: deploy
@@ -32,3 +45,5 @@ deploy:
     - docker compose down
     - docker compose up -d
     
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
