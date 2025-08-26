@@ -6,10 +6,12 @@ stages:
 
 workflow:
   rules:
+    # pipeline only works on main and develop branch
     - if: '$CI_PIPELINE_SOURCE == "push" && ($CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop")'
     - when: never
 
 before_script:
+  # login to local registry
   docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
   
@@ -25,7 +27,7 @@ build:
 test:
   stage: test
   script:
-    - docker compose run django-app python simple_app/manage.py test simple_app
+    - docker compose run --rm django-app python simple_app/manage.py test simple_app
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$CI_COMMIT_BRANCH == "develop"'

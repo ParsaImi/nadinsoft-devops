@@ -7,10 +7,12 @@ rule_files:
 
 
 scrape_configs:
+  #scrape prometheus itself
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
 
+  #scrape django webapp
   - job_name: 'django-app'
     static_configs:
       - targets:  ['django-app:8000']
@@ -18,18 +20,9 @@ scrape_configs:
     scrape_interval: 5s
 
 
-
+# Let Prometheus to show us alerts
 alerting:
   alertmanagers:
     - static_configs:
         - targets: ["alertmanager:9093"]
 
-  # Example job for node_exporter
-  # - job_name: 'node_exporter'
-  #   static_configs:
-  #     - targets: ['node_exporter:9100']
-
-  # Example job for cadvisor
-  # - job_name: 'cadvisor'
-  #   static_configs:
-  #     - targets: ['cadvisor:8080']
